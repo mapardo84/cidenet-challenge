@@ -9,42 +9,92 @@ export const Empleados = () => {
     const [field, setField] = useState('');
     const [dataFilter, setDataFilter] = useState('');
     const [modalFilter, setModalFilter] = useState(false);
+    const [resetFilter, setResetFilter] = useState(false);
 
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await axios.get('http://localhost:3001/');
-            setEmployees(res.data);
+            try{
+                const res = await axios.get('http://localhost:3001/');
+                setEmployees(res.data);
+            } catch (e) { console.error('Problema al acceder a la API',e) }
         }
         fetchApi();
     }, []);
+
+    useEffect(() => {
+        if(resetFilter) {
+            const fetchApi = async () => {
+                try{
+                    const res = await axios.get('http://localhost:3001/');
+                    setEmployees(res.data);
+                } catch (e) { console.error('Problema al acceder a la API',e) }
+            }
+            fetchApi();
+            setResetFilter(false);
+            setField('');
+        } else {
+            setEmployees(employees.filter((e) => {
+                return e[field] === dataFilter    
+            }))
+        }
+    }, [dataFilter, resetFilter]);
+
     return (
         <div className='employees-conteiner'>
+            {field && <button style={{width: '10%', alignSelf: 'center'}} onClick={() => setResetFilter(true)}>Limpiar filtro</button>}
             <table border='1'>
                 <caption>Lista de empleados CIDENET</caption>
                 <tbody>
                     <tr key='0'>
                         <td></td>                   {/*Cabecera de la tabla*/}
-                        <th><AiFillFilter/> 1° nombre</th>
-                        <th><AiFillFilter/> 2° nombre</th>
-                        <th><AiFillFilter/> 1° apellido</th>
-                        <th><AiFillFilter/> 2° apellido</th>
-                        <th><AiFillFilter/> País</th>
-                        <th><AiFillFilter/> Tipo de ID</th>
-                        <th><AiFillFilter/> # ID</th>
-                        <th><AiFillFilter/> E-mail</th>
-                        <th><AiFillFilter/> Fecha ingreso</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('name1');
+                        }}/> 1° nombre</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('name2');
+                        }}/> 2° nombre</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('lastName1');
+                        }}/> 1° apellido</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('lastName2');
+                        }}/> 2° apellido</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('country');
+                        }}/> País</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('idType');
+                        }}/> Tipo de ID</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('id');
+                        }}/> # ID</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('email');
+                        }}/> E-mail</th>
+                        <th>Fecha ingreso</th>
                         <th ><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
                             setModalFilter(true);
                             setField('area');
                         }}/> Área</th>
-                        <th><AiFillFilter/> Estado</th>
-                        <th><AiFillFilter/> Fecha registro</th>
-                        <th><AiFillFilter/> Editar</th>
-                        <th><AiFillFilter/> Borrar</th>
+                        <th><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('status');
+                        }}/> Estado</th>
+                        <th>Fecha registro</th>
+                        <th>Editar</th>
+                        <th>Borrar</th>
                     </tr>
                     {employees.length && employees.map((e, i) => {
                         return (
-                            <tr key={i}>
+                            <tr key={i}>                    {/*Datos de la tabla*/}
                                 <th>{i+1}</th>
                                 <td key='1'>{e.name1}</td>
                                 <td key='2'>{e.name2}</td>
@@ -67,7 +117,7 @@ export const Empleados = () => {
             </table>
             {modalFilter && <Filtro 
                 data={employees} setModal={setModalFilter} setDataFilter={setDataFilter}
-                field={field}
+                field={field} setField={setField}
                 />}
         </div>
     )

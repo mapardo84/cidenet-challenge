@@ -1,10 +1,6 @@
 .employees-conteiner {
     width: 100%;
-    margin: 20px;
+    /* margin: 20px 20px; */
     display: flex;
-    justify-content: center;
-}
-
-AiFillFilter {
-    cursor: pointer;
+    flex-direction: column;
 }

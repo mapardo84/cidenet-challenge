@@ -3,39 +3,50 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { AiFillDelete, AiFillEdit, AiFillFilter } from "react-icons/ai";
 import { Filtro } from '../Filtro/Filtro';
+import Paginacion from '../Paginacion/Paginacion';
 
 export const Empleados = () => {
     const [employees, setEmployees] = useState([]);
+
     const [field, setField] = useState('');
     const [dataFilter, setDataFilter] = useState('');
     const [modalFilter, setModalFilter] = useState(false);
     const [resetFilter, setResetFilter] = useState(false);
 
+    const [ currentPage, setCurrentPage ] = useState(1);
+    const indexLastEmployee = currentPage * 10;
+    const indexFirstEmployee = indexLastEmployee - 10;
+    const [ employeesQty, setEmployeesQty ] = useState(0);
+    const paginate = page => setCurrentPage(page);
+
     useEffect(() => {
         const fetchApi = async () => {
             try{
                 const res = await axios.get('http://localhost:3001/');
-                setEmployees(res.data);
+                setEmployeesQty(res.data.length);
+                setEmployees(res.data.slice(indexFirstEmployee, indexLastEmployee));
             } catch (e) { console.error('Problema al acceder a la API',e) }
         }
         fetchApi();
-    }, []);
+    }, [employees, indexFirstEmployee, indexLastEmployee]);
 
     useEffect(() => {
         if(resetFilter) {
             const fetchApi = async () => {
                 try{
                     const res = await axios.get('http://localhost:3001/');
-                    setEmployees(res.data);
+                    setEmployees(res.data.slice(indexFirstEmployee, indexLastEmployee));
+                    // setEmployeesQty(res.data.length);
                 } catch (e) { console.error('Problema al acceder a la API',e) }
             }
             fetchApi();
             setResetFilter(false);
             setField('');
         } else {
-            setEmployees(employees.filter((e) => {
+            setEmployees(employees.slice(indexFirstEmployee, indexLastEmployee).filter((e) => {
                 return e[field] === dataFilter    
             }))
+            setEmployeesQty(employees.length);
         }
     }, [dataFilter, resetFilter]);
 
@@ -119,6 +130,11 @@ export const Empleados = () => {
                 data={employees} setModal={setModalFilter} setDataFilter={setDataFilter}
                 field={field} setField={setField}
                 />}
+
+            <div style={{display: 'grid', gridTemplateColumns: 'auto', textAlign: 'center'}}>   
+                <p id='games-page'>{currentPage}</p>     
+                <Paginacion totalEmployees={employeesQty} paginate={paginate}/>
+            </div>
         </div>
     )
 }

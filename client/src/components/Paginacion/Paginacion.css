@@ -1,0 +1,22 @@
+.pages {
+    color: #B7BBBE;
+}
+
+.page {
+    color: #B7BBBE;
+    font-weight: bold;
+    padding: 10px;
+    margin: 10px;
+    text-decoration: none;
+    border: solid 1px #B7BBBE;
+    border-radius: 10px;
+}
+.page:hover {
+    color: rgb(41, 41, 41);
+    background-color: rgb(252, 255, 80);
+}
+
+.page:active {
+    color: rgb(41, 41, 41);
+    background-color: salmon;
+}

@@ -2,17 +2,17 @@ import './Empleados.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { AiFillDelete, AiFillEdit, AiFillFilter } from "react-icons/ai";
+import { Filtro } from '../Filtro/Filtro';
 
 export const Empleados = () => {
     const [employees, setEmployees] = useState([]);
-    const [filter, setFilter] = useState({
-        filter: '',
-        atribute: ''
-    });
+    const [field, setField] = useState('');
+    const [dataFilter, setDataFilter] = useState('');
+    const [modalFilter, setModalFilter] = useState(false);
 
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await axios.get('http://localhost:3001/' + filter.filter + '/' + filter.atribute);
+            const res = await axios.get('http://localhost:3001/');
             setEmployees(res.data);
         }
         fetchApi();
@@ -24,20 +24,23 @@ export const Empleados = () => {
                 <tbody>
                     <tr key='0'>
                         <td></td>                   {/*Cabecera de la tabla*/}
-                        <th>1° nombre <AiFillFilter/></th>
-                        <th>2° nombre <AiFillFilter/></th>
-                        <th>1° apellido <AiFillFilter/></th>
-                        <th>2° apellido <AiFillFilter/></th>
-                        <th>País <AiFillFilter/></th>
-                        <th>Tipo de ID <AiFillFilter/></th>
-                        <th># ID <AiFillFilter/></th>
-                        <th>E-mail <AiFillFilter/></th>
-                        <th>Fecha ingreso</th>
-                        <th>Área</th>
-                        <th>Estado <AiFillFilter/></th>
-                        <th>Fecha registro</th>
-                        <th>Editar</th>
-                        <th>Borrar</th>
+                        <th><AiFillFilter/> 1° nombre</th>
+                        <th><AiFillFilter/> 2° nombre</th>
+                        <th><AiFillFilter/> 1° apellido</th>
+                        <th><AiFillFilter/> 2° apellido</th>
+                        <th><AiFillFilter/> País</th>
+                        <th><AiFillFilter/> Tipo de ID</th>
+                        <th><AiFillFilter/> # ID</th>
+                        <th><AiFillFilter/> E-mail</th>
+                        <th><AiFillFilter/> Fecha ingreso</th>
+                        <th ><AiFillFilter style={{cursor: 'pointer'}} onClick={() => {
+                            setModalFilter(true);
+                            setField('area');
+                        }}/> Área</th>
+                        <th><AiFillFilter/> Estado</th>
+                        <th><AiFillFilter/> Fecha registro</th>
+                        <th><AiFillFilter/> Editar</th>
+                        <th><AiFillFilter/> Borrar</th>
                     </tr>
                     {employees.length && employees.map((e, i) => {
                         return (
@@ -62,6 +65,10 @@ export const Empleados = () => {
                     })}
                 </tbody>
             </table>
+            {modalFilter && <Filtro 
+                data={employees} setModal={setModalFilter} setDataFilter={setDataFilter}
+                field={field}
+                />}
         </div>
     )
 }

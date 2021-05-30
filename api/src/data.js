@@ -39,9 +39,9 @@ const addEmployee = async (employee) => {
     } 
 }
 
-const getEmployees = async (filter, atribute) => {
+const getEmployees = async (filter) => {
     try {
-        const resul = await Empleado.findAll({where: { filter: atribute }});      //Trae todos los empleados de la base de datos
+        const resul = await Empleado.findAll();      //Trae todos los empleados de la base de datos
         const empleados = resul.map( x => {
             return x.dataValues
         });

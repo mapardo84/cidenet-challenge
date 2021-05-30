@@ -13,8 +13,9 @@ server.use(morgan('dev'));
 server.use(express.json());
 
 //Rutas
-server.get('/', (_req, res) => {
-    res.json('Página inicial');
+server.get('/', async (_req, res) => {
+    const employees = await getEmployees();
+    res.json(employees);
 });
 
 server.post('/empleado', async (req, res) => {

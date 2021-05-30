@@ -2,6 +2,8 @@ const { Empleado } = require('./db.js');
 
 const addEmployee = async (employee) => {
     const { name1, name2, lastName1, lastName2, country, type, id, startDate, area, status, regTime } = employee;
+    
+    //Concatena primer nombre y apellido para usuario del email
     let email = name1.toLowerCase() + '.' + lastName1.toLowerCase().split(' ').join('');
     
     try {
@@ -13,6 +15,7 @@ const addEmployee = async (employee) => {
         });
         if (user.length) email = email + '.' + user.length;    //Si ya existen, concatena un consecutivo
 
+        //Inserta el empleado a la BD
         const reg = await Empleado.create({
             name1: name1,
             name2: name2,
@@ -36,8 +39,18 @@ const addEmployee = async (employee) => {
     } 
 }
 
-const getEmployees = () => {
-
+const getEmployees = async () => {
+    try {
+        const resul = await Empleado.findAll();      //Trae todos los empleados de la base de datos
+        const empleados = resul.map( x => {
+            return x.dataValues
+        });
+        return empleados;
+    } catch (e) { 
+        console.error('Hubo un problema al acceder a la BD ', e.error[0].message);
+        const msj = e.errors[0].message;
+        return msj;
+    }
 }
 
 const updateEmployee  = (id) => {

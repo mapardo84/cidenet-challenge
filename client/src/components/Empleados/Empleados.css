@@ -1,0 +1,6 @@
+.employees-conteiner {
+    width: 100%;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}

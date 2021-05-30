@@ -13,8 +13,9 @@ server.use(morgan('dev'));
 server.use(express.json());
 
 //Rutas
-server.get('/', async (_req, res) => {
-    const employees = await getEmployees();
+server.get('/:filter/:atribute', async (req, res) => {
+    const { filter, atribute } = req.params;
+    const employees = await getEmployees(filter, atribute);
     res.json(employees);
 });
 

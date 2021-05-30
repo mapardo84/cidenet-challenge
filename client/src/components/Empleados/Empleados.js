@@ -1,14 +1,18 @@
 import './Empleados.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit, AiFillFilter } from "react-icons/ai";
 
 export const Empleados = () => {
     const [employees, setEmployees] = useState([]);
+    const [filter, setFilter] = useState({
+        filter: '',
+        atribute: ''
+    });
 
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await axios.get('http://localhost:3001/');
+            const res = await axios.get('http://localhost:3001/' + filter.filter + '/' + filter.atribute);
             setEmployees(res.data);
         }
         fetchApi();
@@ -18,41 +22,41 @@ export const Empleados = () => {
             <table border='1'>
                 <caption>Lista de empleados CIDENET</caption>
                 <tbody>
-                    <tr>
+                    <tr key='0'>
                         <td></td>                   {/*Cabecera de la tabla*/}
-                        <th>1° nombre</th>
-                        <th>2° nombre</th>
-                        <th>1° apellido</th>
-                        <th>2° apellido</th>
-                        <th>País</th>
-                        <th>Tipo de ID</th>
-                        <th># ID</th>
-                        <th>E-mail</th>
+                        <th>1° nombre <AiFillFilter/></th>
+                        <th>2° nombre <AiFillFilter/></th>
+                        <th>1° apellido <AiFillFilter/></th>
+                        <th>2° apellido <AiFillFilter/></th>
+                        <th>País <AiFillFilter/></th>
+                        <th>Tipo de ID <AiFillFilter/></th>
+                        <th># ID <AiFillFilter/></th>
+                        <th>E-mail <AiFillFilter/></th>
                         <th>Fecha ingreso</th>
                         <th>Área</th>
-                        <th>Estado</th>
+                        <th>Estado <AiFillFilter/></th>
                         <th>Fecha registro</th>
                         <th>Editar</th>
                         <th>Borrar</th>
                     </tr>
                     {employees.length && employees.map((e, i) => {
                         return (
-                            <tr>
+                            <tr key={i}>
                                 <th>{i+1}</th>
-                                <td>{e.name1}</td>
-                                <td>{e.name2}</td>
-                                <td>{e.lastName1}</td>
-                                <td>{e.lastName2}</td>
-                                <td>{e.country}</td>
-                                <td>{e.idType}</td>
-                                <td>{e.id}</td>
-                                <td>{e.email}</td>
-                                <td>{e.startDate}</td>
-                                <td>{e.area}</td>
-                                <td>{e.status}</td>
-                                <td>{e.regDate}</td>
-                                <td><AiFillEdit/></td>
-                                <td><AiFillDelete/></td>
+                                <td key='1'>{e.name1}</td>
+                                <td key='2'>{e.name2}</td>
+                                <td key='3'>{e.lastName1}</td>
+                                <td key='4'>{e.lastName2}</td>
+                                <td key='5'>{e.country}</td>
+                                <td key='6'>{e.idType}</td>
+                                <td key='7'>{e.id}</td>
+                                <td key='8'>{e.email}</td>
+                                <td key='9'>{e.startDate}</td>
+                                <td key='10'>{e.area}</td>
+                                <td key='11'>{e.status}</td>
+                                <td key='12'>{e.regDate}</td>
+                                <td key='13'><AiFillEdit/></td>
+                                <td key='14'><AiFillDelete/></td>
                             </tr>
                         )
                     })}

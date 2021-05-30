@@ -29,7 +29,7 @@ server.put('/empleado/:id', async (_req, res) => {
 
 server.delete('/empleado/:id', async (req, res) => {
     if (req.params.id) {
-        const resul = await deleteEmployee(req.params.id);
+        await deleteEmployee(req.params.id);
         res.json(`Empleado con ID ${req.params.id} borrado`);
     } else {
         res.json('No se ha borrado nada');

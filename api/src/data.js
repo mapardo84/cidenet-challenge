@@ -59,15 +59,13 @@ const updateEmployee  = (id) => {
 
 const deleteEmployee  = async (id) => {
     try {
-        const resul = await Empleado.destroy({              //Borra el empleado con el id recibido, de la BD
+        await Empleado.destroy({              //Borra el empleado con el id recibido, de la BD
             where: {
                 id: id
             }
         });      
-        // console.log(resul);
-        // return empleados;
     } catch (e) { 
-        console.error('Hubo un problema al acceder a la BD ', e.error[0].message);
+        console.error('Hubo un problema al acceder a la BD ', e);
         const msj = e.errors[0].message;
         return msj;
     }

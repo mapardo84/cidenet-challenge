@@ -28,7 +28,7 @@ export const Empleados = () => {
             } catch (e) { console.error('Problema al acceder a la API',e) }
         }
         fetchApi();
-    }, [employees, indexFirstEmployee, indexLastEmployee]);
+    }, [indexFirstEmployee, indexLastEmployee]);
 
     useEffect(() => {
         if(resetFilter) {
@@ -36,14 +36,14 @@ export const Empleados = () => {
                 try{
                     const res = await axios.get('http://localhost:3001/');
                     setEmployees(res.data.slice(indexFirstEmployee, indexLastEmployee));
-                    // setEmployeesQty(res.data.length);
+                    setEmployeesQty(res.data.length);
                 } catch (e) { console.error('Problema al acceder a la API',e) }
             }
             fetchApi();
             setResetFilter(false);
             setField('');
         } else {
-            setEmployees(employees.slice(indexFirstEmployee, indexLastEmployee).filter((e) => {
+            setEmployees(employees.filter((e) => {
                 return e[field] === dataFilter    
             }))
             setEmployeesQty(employees.length);

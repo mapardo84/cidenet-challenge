@@ -1,0 +1,21 @@
+.register-conteiner {
+    margin: 10px 35%;
+    border: solid 1px gray;
+    border-radius: 10px;
+}
+
+.boton {
+    margin: 20px 0;
+    font-size: 20px; 
+}
+
+.input-register {
+    margin: 20px 0;
+}
+
+.form-inputs {
+    margin: 0 80px;
+    display: flex;
+    flex-flow: column;
+    align-content: center;
+}

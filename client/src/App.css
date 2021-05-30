@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+}
+
+.nav-app {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(202, 231, 248);
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content:space-between;
+}
+
+#nav-title {
+  margin-left: 20px;
+}
+
+#add-boton {
+  font-size: medium;
+  width: 7%;
+  margin: 20px;
+  margin-right: 20px;
+}

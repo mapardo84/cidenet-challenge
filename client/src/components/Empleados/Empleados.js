@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { AiFillDelete, AiFillEdit, AiFillFilter } from "react-icons/ai";
 import { Filtro } from '../Filtro/Filtro';
+import { Borrar } from '../Borrar/Borrar';
 import Paginacion from '../Paginacion/Paginacion';
 
 export const Empleados = () => {
@@ -19,6 +20,10 @@ export const Empleados = () => {
     const [ employeesQty, setEmployeesQty ] = useState(0);
     const paginate = page => setCurrentPage(page);
 
+    const [modalDelete, setModalDelete] = useState(false);
+    const [toDelete, setToDelete] = useState(0);
+    const [accept, setAccept] = useState(false);
+
     useEffect(() => {
         const fetchApi = async () => {
             try{
@@ -28,7 +33,7 @@ export const Empleados = () => {
             } catch (e) { console.error('Problema al acceder a la API',e) }
         }
         fetchApi();
-    }, [indexFirstEmployee, indexLastEmployee]);
+    }, [accept, indexFirstEmployee, indexLastEmployee]);
 
     useEffect(() => {
         if(resetFilter) {
@@ -49,6 +54,18 @@ export const Empleados = () => {
             setEmployeesQty(employees.length);
         }
     }, [dataFilter, resetFilter]);
+
+    useEffect(() => {
+        const fetchApi = async () => {
+            try{
+                const res = await axios.delete('http://localhost:3001/empleado/' + toDelete);
+            } catch (e) { console.error('Problema al acceder a la API',e) }
+        }
+        if (accept && toDelete) { 
+            fetchApi();
+            setAccept(false);
+        }
+    }, [accept]);
 
     return (
         <div className='employees-conteiner'>
@@ -119,8 +136,11 @@ export const Empleados = () => {
                                 <td key='10'>{e.area}</td>
                                 <td key='11'>{e.status}</td>
                                 <td key='12'>{e.regDate}</td>
-                                <td key='13'><AiFillEdit/></td>
-                                <td key='14'><AiFillDelete/></td>
+                                <td key='13'><AiFillEdit style={{cursor: 'pointer'}}/></td>
+                                <td key='14'><AiFillDelete style={{cursor: 'pointer'}} onClick={() => {
+                                    setModalDelete(true);
+                                    setToDelete(e.id);
+                                }}/></td>
                             </tr>
                         )
                     })}
@@ -130,7 +150,11 @@ export const Empleados = () => {
                 data={employees} setModal={setModalFilter} setDataFilter={setDataFilter}
                 field={field} setField={setField}
                 />}
-
+            
+            {modalDelete && <Borrar 
+                id={toDelete} setModal={setModalDelete} setAccept={setAccept}
+                />}
+            
             <div style={{display: 'grid', gridTemplateColumns: 'auto', textAlign: 'center'}}>   
                 <p id='games-page'>{currentPage}</p>     
                 <Paginacion totalEmployees={employeesQty} paginate={paginate}/>

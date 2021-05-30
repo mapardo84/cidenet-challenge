@@ -17,8 +17,8 @@ server.get('/', (_req, res) => {
     res.json('Página inicial');
 });
 
-server.post('/empleado', (req, res) => {
-    const resul = addEmployee(req.body);
+server.post('/empleado', async (req, res) => {
+    const resul = await addEmployee(req.body);
     res.json(resul);
 });
 

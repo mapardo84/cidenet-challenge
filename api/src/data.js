@@ -2,7 +2,7 @@ const { Empleado } = require('./db.js');
 
 const addEmployee = async (employee) => {
     const { name1, name2, lastName1, lastName2, country, type, id, startDate, area, status, regTime } = employee;
-    let email = name1.toLowerCase() + '.' + lastName1.toLowerCase();
+    let email = name1.toLowerCase() + '.' + lastName1.toLowerCase().split(' ').join('');
     
     try {
         const user = await Empleado.findAll({           //Consulta si los primeros nombre y apellido ya existen
@@ -29,7 +29,11 @@ const addEmployee = async (employee) => {
         });
         console.log('Se registró el empleado ' + reg.name1);
         return reg;
-    } catch (e) { console.error('Hubo un problema al registrar el empleado\n', e) } 
+    } catch (e) { 
+        console.error('Hubo un problema al registrar el empleado\n', e.errors[0].message);
+        const msj = e.errors[0].message;
+        return msj;
+    } 
 }
 
 const getEmployees = () => {

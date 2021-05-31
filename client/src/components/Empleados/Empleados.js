@@ -8,6 +8,7 @@ import Paginacion from '../Paginacion/Paginacion';
 
 export const Empleados = () => {
     const [employees, setEmployees] = useState([]);
+    const [toShow, setToShow] = useState([]);
 
     const [field, setField] = useState('');
     const [dataFilter, setDataFilter] = useState('');
@@ -17,7 +18,7 @@ export const Empleados = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
     const indexLastEmployee = currentPage * 10;
     const indexFirstEmployee = indexLastEmployee - 10;
-    const [ employeesQty, setEmployeesQty ] = useState(0);
+    // const [ employeesQty, setEmployeesQty ] = useState(0);
     const paginate = page => setCurrentPage(page);
 
     const [modalDelete, setModalDelete] = useState(false);
@@ -28,37 +29,22 @@ export const Empleados = () => {
         const fetchApi = async () => {
             try{
                 const res = await axios.get('http://localhost:3001/');
-                setEmployeesQty(res.data.length);
-                setEmployees(res.data.slice(indexFirstEmployee, indexLastEmployee));
+                setEmployees(res.data);
+                setToShow(res.data.slice(indexFirstEmployee, indexLastEmployee));
             } catch (e) { console.error('Problema al acceder a la API',e) }
         }
-        fetchApi();
-    }, [accept, indexFirstEmployee, indexLastEmployee]);
-
-    useEffect(() => {
-        if(resetFilter) {
-            const fetchApi = async () => {
-                try{
-                    const res = await axios.get('http://localhost:3001/');
-                    setEmployees(res.data.slice(indexFirstEmployee, indexLastEmployee));
-                    setEmployeesQty(res.data.length);
-                } catch (e) { console.error('Problema al acceder a la API',e) }
-            }
-            fetchApi();
-            setResetFilter(false);
-            setField('');
-        } else {
-            setEmployees(employees.filter((e) => {
+        if (!dataFilter) fetchApi();
+        else {
+            setToShow(employees.filter((e) => {
                 return e[field] === dataFilter    
-            }))
-            setEmployeesQty(employees.length);
+            }));
         }
-    }, [dataFilter, resetFilter]);
+    }, [accept, indexFirstEmployee, indexLastEmployee, dataFilter, resetFilter]);
 
     useEffect(() => {
         const fetchApi = async () => {
             try{
-                const res = await axios.delete('http://localhost:3001/empleado/' + toDelete);
+                await axios.delete('http://localhost:3001/empleado/' + toDelete);
             } catch (e) { console.error('Problema al acceder a la API',e) }
         }
         if (accept && toDelete) { 
@@ -69,7 +55,10 @@ export const Empleados = () => {
 
     return (
         <div className='employees-conteiner'>
-            {field && <button style={{width: '10%', alignSelf: 'center'}} onClick={() => setResetFilter(true)}>Limpiar filtro</button>}
+            {dataFilter && <button style={{width: '10%', alignSelf: 'center'}} onClick={() => {
+                setResetFilter(true);
+                setDataFilter('');
+            }}>Limpiar filtro</button>}
             <table border='1'>
                 <caption>Lista de empleados CIDENET</caption>
                 <tbody>
@@ -120,7 +109,7 @@ export const Empleados = () => {
                         <th>Editar</th>
                         <th>Borrar</th>
                     </tr>
-                    {employees.length && employees.map((e, i) => {
+                    {toShow.length && toShow.map((e, i) => {
                         return (
                             <tr key={i}>                    {/*Datos de la tabla*/}
                                 <th>{i+1}</th>
@@ -157,7 +146,7 @@ export const Empleados = () => {
             
             <div style={{display: 'grid', gridTemplateColumns: 'auto', textAlign: 'center'}}>   
                 <p id='games-page'>{currentPage}</p>     
-                <Paginacion totalEmployees={employeesQty} paginate={paginate}/>
+                <Paginacion totalEmployees={employees.length} paginate={paginate}/>
             </div>
         </div>
     )
